@@ -156,16 +156,9 @@ app.put("/api/deploy/:id", async (req,res)=>{
 //////////////////////////////////////////////////
 // START SERVER
 //////////////////////////////////////////////////
-app.get("/api/disasters", async (req, res) => {
-  try {
-    const data = await Disaster.find();
-    res.json(data);
-  } catch (err) {
-    console.error(err);   // 👈 shows error in Railway logs
-    res.status(500).json({ error: err.message }); // 👈 shows real error in browser
-  }
+app.get("/", (req, res) => {
+  res.send("API Running 🚀");
 });
-
 app.listen(5000,()=>{
  console.log("Server running on port 5000");
 });
