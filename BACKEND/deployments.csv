@@ -1,0 +1,16 @@
+3,Earthquake,Mumbai,69,287,36,165171,High,Deployed,2026-03-24T17:24:41.258Z
+13,Wildfire,Delhi,94,260,57,194730,Critical,Deployed,2026-03-24T17:27:46.413Z
+27,Landslide,Mumbai,96,266,75,140061,Critical,Deployed,2026-03-24T17:34:59.793Z
+17,Earthquake,Hyderabad,90,156,41,102150,Critical,Deployed,2026-03-24T17:52:29.793Z
+15,Cyclone,Chennai,94,215,64,58112,Critical,Deployed,2026-03-24T17:52:33.773Z
+1,Cyclone,Chennai,88,147,138,109488,Critical,Deployed,2026-03-25T05:45:09.985Z
+69c42f0ee5ba2b245a40be54,Wildfire,Kerala,87,249,146,190797,Critical,Deployed,2026-03-25T18:55:44.502Z
+69c42fb6bd0f99087eccd9ae,Earthquake,Mumbai,95,226,29,20697,Critical,Deployed,2026-03-25T18:55:58.641Z
+69c432d43bc05cbb0d4d395f,Flood,Delhi,97,162,39,115216,Critical,Deployed,2026-03-25T19:15:42.905Z
+69c43443e66fe923bc4eac6f,Wildfire,Kerala,89,65,60,32434,Critical,Deployed,2026-03-25T19:15:46.022Z
+69c43452e66fe923bc4eac73,Landslide,Kerala,71,51,120,180599,High,Deployed,2026-03-25T19:15:48.704Z
+69c7fc489b0b8a1a51cbf66f,Earthquake,Kolkata,96,260,95,36870,Critical,Deployed,2026-03-28T16:06:32.150Z
+69c4348ee66fe923bc4eac8d,Cyclone,Odisha Coast,98,158,109,50538,Critical,Deployed,2026-03-28T16:06:36.024Z
+69c43461e66fe923bc4eac7a,Flood,Chennai,94,232,48,136295,Critical,Deployed,2026-03-28T16:06:39.116Z
+69c80208778188b54edf37f1,Earthquake,Mumbai,87,219,49,44245,Critical,Deployed,2026-03-28T16:30:40.387Z
+69c80370778188b54edf3839,Wildfire,Kerala,94,80,133,93555,Critical,Deployed,2026-03-28T16:36:46.337Z
