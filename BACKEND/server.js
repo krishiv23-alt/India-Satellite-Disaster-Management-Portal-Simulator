@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const fs = require("fs");
+require("dotenv").config(); // ✅ IMPORTANT
 
 const Disaster = require("./models/Disaster");
 const Deployment = require("./models/Deployment");
@@ -11,23 +12,26 @@ app.use(cors());
 app.use(express.json());
 
 //////////////////////////////////////////////////
-// MONGODB CONNECTION
+// ✅ MONGODB CONNECTION (FIXED)
 //////////////////////////////////////////////////
 
-mongoose.connect("mongodb://127.0.0.1:27017/disasterDB")
-.then(()=>console.log("MongoDB Connected"))
-.catch(err=>console.log(err));
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("MongoDB Connected ✅"))
+.catch(err => console.log("Mongo Error ❌", err));
 
 //////////////////////////////////////////////////
 // DATA SETUP
 //////////////////////////////////////////////////
 
 const regions = [
-"Delhi","Mumbai","Chennai","Kolkata","Hyderabad","Gujarat","Kerala","Odisha Coast"
+  "Delhi","Mumbai","Chennai","Kolkata","Hyderabad","Gujarat","Kerala","Odisha Coast"
 ];
 
 const disasterTypes = [
-"Flood","Cyclone","Wildfire","Earthquake","Landslide"
+  "Flood","Cyclone","Wildfire","Earthquake","Landslide"
 ];
 
 function random(min,max){
@@ -46,7 +50,6 @@ function classifySeverity(intensity){
 //////////////////////////////////////////////////
 
 async function generateDisaster(){
-
  try{
 
   const intensity=random(30,100);
@@ -55,7 +58,6 @@ async function generateDisaster(){
   const population=random(10000,200000);
 
   const disaster = new Disaster({
-
    type: disasterTypes[random(0,disasterTypes.length-1)],
    region: regions[random(0,regions.length-1)],
    intensity,
@@ -64,23 +66,28 @@ async function generateDisaster(){
    population_at_risk: population,
    severity: classifySeverity(intensity),
    detected_at: new Date().toLocaleTimeString()
-
   });
 
   await disaster.save();
-
   console.log("Saved disaster");
 
  }catch(err){
-  console.log(err);
+  console.log("Generate Error ❌", err);
  }
-
 }
 
 setInterval(generateDisaster,15000);
 
 //////////////////////////////////////////////////
-// GET DISASTERS
+// ROOT ROUTE (FIXED)
+//////////////////////////////////////////////////
+
+app.get("/", (req, res) => {
+  res.send("API Running 🚀");
+});
+
+//////////////////////////////////////////////////
+// GET DISASTERS (DEBUG IMPROVED)
 //////////////////////////////////////////////////
 
 app.get("/api/disasters", async (req,res)=>{
@@ -88,7 +95,8 @@ app.get("/api/disasters", async (req,res)=>{
   const data = await Disaster.find().sort({ _id: -1 });
   res.json(data);
  }catch(err){
-  res.status(500).json({error:"Error"});
+  console.log("Fetch Error ❌", err);
+  res.status(500).json({error: err.message});
  }
 });
 
@@ -97,7 +105,6 @@ app.get("/api/disasters", async (req,res)=>{
 //////////////////////////////////////////////////
 
 app.put("/api/deploy/:id", async (req,res)=>{
-
  try{
 
   const id = req.params.id;
@@ -112,26 +119,16 @@ app.put("/api/deploy/:id", async (req,res)=>{
     return res.status(404).json({error:"Not found"});
   }
 
-  /////////////////////////////////////////////
-  // SAVE DEPLOYMENT IN MONGODB
-  /////////////////////////////////////////////
-
   const deployment = new Deployment({
-
    disasterId: disaster._id,
    type: disaster.type,
    region: disaster.region,
    severity: disaster.severity,
    status: disaster.status,
    deployed_at: new Date().toISOString()
-
   });
 
   await deployment.save();
-
-  /////////////////////////////////////////////
-  // CSV LOG
-  /////////////////////////////////////////////
 
   if (!fs.existsSync("deployments.csv")) {
     fs.writeFileSync(
@@ -147,18 +144,17 @@ app.put("/api/deploy/:id", async (req,res)=>{
   res.json({message:"Deployed"});
 
  }catch(err){
-  console.log(err);
-  res.status(500).json({error:"Server error"});
+  console.log("Deploy Error ❌", err);
+  res.status(500).json({error: err.message});
  }
-
 });
 
 //////////////////////////////////////////////////
-// START SERVER
+// START SERVER (FIXED FOR RAILWAY)
 //////////////////////////////////////////////////
-app.get("/", (req, res) => {
-  res.send("API Running 🚀");
-});
-app.listen(5000,()=>{
- console.log("Server running on port 5000");
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, ()=>{
+ console.log(`Server running on port ${PORT}`);
 });
