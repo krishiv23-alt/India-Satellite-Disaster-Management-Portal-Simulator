@@ -2,7 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const fs = require("fs");
+<<<<<<< HEAD
 require("dotenv").config(); // ✅ IMPORTANT
+=======
+require("dotenv").config(); // ✅ added
+>>>>>>> f94d75d (debug error)
 
 const Disaster = require("./models/Disaster");
 const Deployment = require("./models/Deployment");
@@ -12,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 //////////////////////////////////////////////////
+<<<<<<< HEAD
 // ✅ MONGODB CONNECTION (FIXED)
 //////////////////////////////////////////////////
 
@@ -21,6 +26,14 @@ mongoose.connect(process.env.MONGO_URI, {
 })
 .then(() => console.log("MongoDB Connected ✅"))
 .catch(err => console.log("Mongo Error ❌", err));
+=======
+// MONGODB CONNECTION (UPDATED)
+//////////////////////////////////////////////////
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log(err));
+>>>>>>> f94d75d (debug error)
 
 //////////////////////////////////////////////////
 // DATA SETUP
@@ -150,11 +163,19 @@ app.put("/api/deploy/:id", async (req,res)=>{
 });
 
 //////////////////////////////////////////////////
+<<<<<<< HEAD
 // START SERVER (FIXED FOR RAILWAY)
+=======
+// START SERVER (UPDATED)
+>>>>>>> f94d75d (debug error)
 //////////////////////////////////////////////////
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, ()=>{
  console.log(`Server running on port ${PORT}`);
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> f94d75d (debug error)
