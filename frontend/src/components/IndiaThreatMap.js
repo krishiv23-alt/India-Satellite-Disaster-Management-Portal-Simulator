@@ -1,6 +1,3 @@
-
-
-
 import React from "react";
 import indiaMap from "../images/india-map.png";
 
@@ -21,33 +18,41 @@ Gujarat:{top:"48%",left:"20%"},
 
 };
 
-return(
+
+
+//////////////////////////////////////////////////
+// 🔴 SHOW ONLY ACTIVE CRITICAL DISASTERS
+//////////////////////////////////////////////////
+
+const activeCritical = alerts.filter(
+  a => a.severity === "Critical" && a.status !== "Deployed"
+);
+
+return (
 
 <div className="india-map">
 
-<img src={indiaMap} className="india-svg"/>
+<img src={indiaMap} className="india-svg" alt="India Map"/>
 
-{alerts
-.filter(a => a.severity === "Critical" && a.status !== "Deployed") // 🔥 REMOVE DEPLOYED
-.map((a,i)=>{
+{activeCritical.map((a, i) => {
 
-const pos = cityCoordinates[a.region];
-if(!pos) return null;
+  const pos = cityCoordinates[a.region];
+  if (!pos) return null;
 
-return(
-<div
-key={i}
-className="alert-dot"
-style={{top:pos.top,left:pos.left}}
-title={a.region}   /* ✅ HOVER NAME */
-></div>
-);
-
+  return (
+    <div
+      key={a._id || i}
+      className="alert-dot"
+      style={{ top: pos.top, left: pos.left }}
+      title={a.region}
+    ></div>
+  );
 })}
 
 </div>
 
 );
+
 }
 
 export default IndiaThreatMap;
