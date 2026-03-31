@@ -2,11 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const fs = require("fs");
-<<<<<<< HEAD
-require("dotenv").config(); // ✅ IMPORTANT
-=======
-require("dotenv").config(); // ✅ added
->>>>>>> f94d75d (debug error)
 
 const Disaster = require("./models/Disaster");
 const Deployment = require("./models/Deployment");
@@ -16,35 +11,23 @@ app.use(cors());
 app.use(express.json());
 
 //////////////////////////////////////////////////
-<<<<<<< HEAD
-// ✅ MONGODB CONNECTION (FIXED)
+// 🔌 MONGODB CONNECTION
 //////////////////////////////////////////////////
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log("MongoDB Connected ✅"))
-.catch(err => console.log("Mongo Error ❌", err));
-=======
-// MONGODB CONNECTION (UPDATED)
-//////////////////////////////////////////////////
-
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log(err));
->>>>>>> f94d75d (debug error)
+mongoose.connect("mongodb://127.0.0.1:27017/disasterDB")
+.then(() => console.log("MongoDB Connected"))
+.catch(err => console.log(err));
 
 //////////////////////////////////////////////////
-// DATA SETUP
+// 📊 DATA CONFIG
 //////////////////////////////////////////////////
 
 const regions = [
-  "Delhi","Mumbai","Chennai","Kolkata","Hyderabad","Gujarat","Kerala","Odisha Coast"
+"Delhi","Mumbai","Chennai","Kolkata","Hyderabad","Gujarat","Kerala","Odisha Coast"
 ];
 
 const disasterTypes = [
-  "Flood","Cyclone","Wildfire","Earthquake","Landslide"
+"Flood","Cyclone","Wildfire","Earthquake","Landslide"
 ];
 
 function random(min,max){
@@ -59,65 +42,64 @@ function classifySeverity(intensity){
 }
 
 //////////////////////////////////////////////////
-// GENERATE DISASTER
+// 🔁 GENERATE DISASTER DATA
 //////////////////////////////////////////////////
 
 async function generateDisaster(){
+
  try{
 
-  const intensity=random(30,100);
-  const rainfall=random(50,300);
-  const wind=random(20,150);
-  const population=random(10000,200000);
+  const intensity = random(30,100);
+  const rainfall = random(50,300);
+  const wind = random(20,150);
+  const population = random(10000,200000);
 
   const disaster = new Disaster({
-   type: disasterTypes[random(0,disasterTypes.length-1)],
-   region: regions[random(0,regions.length-1)],
-   intensity,
-   rainfall_mm: rainfall,
-   wind_speed_kmph: wind,
-   population_at_risk: population,
-   severity: classifySeverity(intensity),
-   detected_at: new Date().toLocaleTimeString()
+
+    type: disasterTypes[random(0,disasterTypes.length-1)],
+    region: regions[random(0,regions.length-1)],
+    intensity,
+    rainfall_mm: rainfall,
+    wind_speed_kmph: wind,
+    population_at_risk: population,
+    severity: classifySeverity(intensity),
+    detected_at: new Date().toLocaleTimeString()
+
   });
 
   await disaster.save();
-  console.log("Saved disaster");
+
+  console.log("✔ Disaster saved");
 
  }catch(err){
-  console.log("Generate Error ❌", err);
+  console.error(err);
  }
+
 }
 
 setInterval(generateDisaster,15000);
 
 //////////////////////////////////////////////////
-// ROOT ROUTE (FIXED)
-//////////////////////////////////////////////////
-
-app.get("/", (req, res) => {
-  res.send("API Running 🚀");
-});
-
-//////////////////////////////////////////////////
-// GET DISASTERS (DEBUG IMPROVED)
+// 📡 GET ALL DISASTERS
 //////////////////////////////////////////////////
 
 app.get("/api/disasters", async (req,res)=>{
+
  try{
   const data = await Disaster.find().sort({ _id: -1 });
   res.json(data);
  }catch(err){
-  console.log("Fetch Error ❌", err);
-  res.status(500).json({error: err.message});
+  res.status(500).json({error:"Error fetching data"});
  }
+
 });
 
 //////////////////////////////////////////////////
-// DEPLOY RESOURCES
+// 🚑 DEPLOY RESOURCES
 //////////////////////////////////////////////////
 
 app.put("/api/deploy/:id", async (req,res)=>{
+
  try{
 
   const id = req.params.id;
@@ -129,19 +111,29 @@ app.put("/api/deploy/:id", async (req,res)=>{
   );
 
   if(!disaster){
-    return res.status(404).json({error:"Not found"});
+    return res.status(404).json({error:"Disaster not found"});
   }
 
+  //////////////////////////////////////////////////
+  // 💾 SAVE TO MONGODB (DEPLOYMENTS COLLECTION)
+  //////////////////////////////////////////////////
+
   const deployment = new Deployment({
-   disasterId: disaster._id,
-   type: disaster.type,
-   region: disaster.region,
-   severity: disaster.severity,
-   status: disaster.status,
-   deployed_at: new Date().toISOString()
+
+    disasterId: disaster._id,
+    type: disaster.type,
+    region: disaster.region,
+    severity: disaster.severity,
+    status: disaster.status,
+    deployed_at: new Date().toISOString()
+
   });
 
   await deployment.save();
+
+  //////////////////////////////////////////////////
+  // 📄 CSV LOGGING
+  //////////////////////////////////////////////////
 
   if (!fs.existsSync("deployments.csv")) {
     fs.writeFileSync(
@@ -154,28 +146,19 @@ app.put("/api/deploy/:id", async (req,res)=>{
 
   fs.appendFileSync("deployments.csv", row);
 
-  res.json({message:"Deployed"});
+  res.json({message:"Resources deployed successfully"});
 
  }catch(err){
-  console.log("Deploy Error ❌", err);
-  res.status(500).json({error: err.message});
+  console.error(err);
+  res.status(500).json({error:"Server error"});
  }
+
 });
 
 //////////////////////////////////////////////////
-<<<<<<< HEAD
-// START SERVER (FIXED FOR RAILWAY)
-=======
-// START SERVER (UPDATED)
->>>>>>> f94d75d (debug error)
+// 🚀 START SERVER
 //////////////////////////////////////////////////
 
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, ()=>{
- console.log(`Server running on port ${PORT}`);
-<<<<<<< HEAD
+app.listen(5000,()=>{
+ console.log("🚀 Server running on port 5000");
 });
-=======
-});
->>>>>>> f94d75d (debug error)
